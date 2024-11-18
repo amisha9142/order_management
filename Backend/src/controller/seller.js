@@ -66,17 +66,40 @@ exports.getSellerOrders = async (req, res) => {
 
 
 
-// Update order status (accept/reject)
+
+// Update order status (Accept, Reject, or Forward)
 exports.updateOrderStatus = async (req, res) => {
-  const { orderId, status, reasonForRejection } = req.body;
+  const { orderId, status, rejectionReason } = req.body;
 
   try {
-    const update = { status };
-    if (status === "Rejected") update.reasonForRejection = reasonForRejection;
+   
+    const order = await Order.findById(orderId);
+    if (!order) return res.status(404).json({ message: "Order not found" });
 
-    const order = await Order.findByIdAndUpdate(orderId, update, { new: true });
-    res.status(200).json(order);
+   
+    if (status === "Rejected" && !rejectionReason) {
+      return res.status(400).json({ message: "Rejection reason is required when rejecting an order." });
+    }
+    const updateData = { status };
+
+  
+    if (status === "Rejected") {
+      updateData.reasonForRejection = rejectionReason;
+    } else if (status === "Forward" || status === "Accepted") {
+      updateData.reasonForRejection = null;
+    }
+
+    // Update the order
+    const updatedOrder = await Order.findByIdAndUpdate(orderId, updateData, {
+      new: true,
+    });
+
+    res.status(200).json({
+      message: "Order status updated successfully!",
+      order: updatedOrder,
+    });
   } catch (error) {
+    console.error("Error updating order status:", error);
     res.status(500).json({ message: "Error updating order status", error });
   }
 };

@@ -6,18 +6,17 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    
     localStorage.removeItem("userId");
-    toast.success("logout successfully!!")
-   
+    toast.success("Logged out successfully!!");
+
     navigate("/login");
   };
 
   return (
-    <div className="flex justify-between items-center p-4 bg-blue-600 text-white">
-      <h1 className="text-2xl">Dashboard</h1>
+    <div className="flex justify-between items-center p-4 bg-customGreen text-white">
+      <h1 className="text-2xl text-customWhite">Dashboard</h1>
       <button
-        className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+        className="bg-customBrown text-white py-2 px-4 rounded"
         onClick={handleLogout}
       >
         Logout
