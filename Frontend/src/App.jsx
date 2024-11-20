@@ -16,11 +16,11 @@ const App = () => {
       <Toaster />
       <Routes>
        
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/" element={<Signup />} />
         <Route path="/login" element={<Login />} />
 
         <Route
-          path="/"
+          path="/dashboard"
           element={
             <div className="flex h-screen bg-gray-100">
               <Sidebar />
